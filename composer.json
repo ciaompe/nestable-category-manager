@@ -1,0 +1,11 @@
+{	"autoload": {
+        "psr-4": {
+            "Ciaompe\\": "system"
+        }
+    },
+    "require": {
+        "twig/twig": "^2.0",
+        "gabordemooij/redbean": "^5.1",
+        "hassankhan/config": "^1.1"
+    }
+}

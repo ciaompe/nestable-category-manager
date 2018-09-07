@@ -1,0 +1,97 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Nested Category Manager (with backend)</title>
+        <meta name="description" content="Nested Category Manager by Ciaompe">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="assets/css/nestable.css">
+    </head>
+    <body>
+        
+        <br><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Category Manager</h3>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="dd" id="categories">
+
+                                {% macro recursiveCategory(category) %}
+
+                                    {% import _self as forms %}
+
+                                    <li class="dd-item dd3-item" data-id="{{category.id}}">
+
+                                        <div class="dd-handle dd3-handle">Drag</div>
+                                        <div class="dd3-content">
+                                            {{category.title}}
+                                        </div>
+
+                                        {% if category.children|length %}
+                                            <ol>
+                                                {% for child in category.children %}
+                                                    {{ forms.recursiveCategory(child) }}
+                                                {% endfor %}
+                                            </ol>
+                                        {% endif %}
+
+                                    </li>
+
+                                {% endmacro %}
+
+                                {% if categories %}
+                                    <ol class="dd-list">
+                                        {% import _self as forms %}
+                                        {% for category in categories %}
+                                            {{forms.recursiveCategory(category) }}
+                                        {% endfor %}
+                                    </ol>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <footer class="container-fluid text-center">
+            <p>Nested Category Manager By <a href="https://ciaompe.com">Ciaompe.com</a></p>
+        </footer>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="assets/js/nestable.js"></script>
+
+
+        <script type="text/javascript">
+
+            $('#categories').nestable().on('change', update_server);
+
+            function update_server(e) {
+                var list = e.length ? e : $(e.target);
+                var data = JSON.stringify(list.nestable('serialize'));
+                $.ajax({
+                    type: "POST",
+                    data: {data: data},
+                    url: "update.php",
+                    error:function(){
+                        console.log('Server Error occured');
+                    }
+                });
+            }
+
+        </script>
+
+    </body>
+</html>

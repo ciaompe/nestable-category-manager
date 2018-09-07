@@ -28,5 +28,6 @@ $twig = new Twig_Environment($loader);
 
 //Make Database Connection
 $db =  new Database($config);
+
 $cat = new Category();
 

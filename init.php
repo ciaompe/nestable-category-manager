@@ -1,5 +1,4 @@
 <?php
-
 /*
 Display errors turn on
 */
